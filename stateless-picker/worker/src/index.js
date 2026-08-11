@@ -1,7 +1,7 @@
 import { Hono } from "hono/tiny";
 import { getPageHtml } from "./page.js";
 import { getLandingHtml } from "./landing.js";
-import { parseCoords, gcj02ToWgs84, bd09ToWgs84, round6 } from "./parse.js";
+import { parseCoords, toWgs84, gcj02ToWgs84, round6 } from "./parse.js";
 import { ICON_180_B64, ICON_512_B64, ICON_SVG, b64ToBytes } from "./icons.js";
 import { LOCATION_SPOOFER_B64, LOCATION_SETTINGS_B64, LOCATION_SPOOFER_QX_B64 } from "./modules.js";
 
@@ -137,15 +137,18 @@ app.get("/api/parse", async (c) => {
   const fmt = (c.req.query("format") || "").toLowerCase();
   try {
     let { lat, lon, name, src } = await parseCoords(raw);
-    // Normalize every source to WGS-84 at the entrance (hard requirement):
-    //   Baidu link => BD-09;  Amap / Apple / Google (mainland) => GCJ-02.
-    // The GCJ/BD guards no-op outside China, so foreign coordinates pass through.
-    if (cs !== "none") {
-      if (src === "baidu" || cs === "bd09" || cs === "baidu") {
-        ({ lat, lon } = bd09ToWgs84(lat, lon));
-      } else if (cs === "gcj" || src === "amap" || src === "apple" || src === "google") {
-        ({ lat, lon } = gcj02ToWgs84(lat, lon));
-      }
+    // Normalize every source to WGS-84 at the entrance (hard requirement).
+    // Automatic path uses toWgs84(src): Baidu => BD-09; Amap/Apple/Google => GCJ-02,
+    // EXCEPT Apple/Google in HK/Macau/Taiwan which are already WGS-84 (Yu9191 v1.1).
+    // Explicit cs= overrides still win. All guards no-op outside China.
+    if (cs === "none") {
+      // leave coordinates untouched
+    } else if (cs === "bd09" || cs === "baidu") {
+      ({ lat, lon } = toWgs84(lat, lon, "baidu"));
+    } else if (cs === "gcj") {
+      ({ lat, lon } = gcj02ToWgs84(lat, lon));
+    } else {
+      ({ lat, lon } = toWgs84(lat, lon, src));
     }
     lat = round6(lat);
     lon = round6(lon);

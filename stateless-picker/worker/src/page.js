@@ -203,6 +203,7 @@ body {
       <div class="acc-row">
         <div class="accfield"><span class="acclbl" data-i18n="hacc">H. accuracy</span><input id="haccInput" type="number" inputmode="numeric" step="1" min="1" value="39" /></div>
         <div class="accfield"><span class="acclbl" data-i18n="vacc">V. accuracy</span><input id="vaccInput" type="number" inputmode="numeric" step="1" min="1" value="1000" /></div>
+        <div class="accfield"><span class="acclbl" data-i18n="jitter">Jitter radius</span><input id="jitterInput" type="number" inputmode="numeric" step="1" min="0" value="0" /></div>
       </div>
     </div>
     <div class="row">
@@ -296,7 +297,8 @@ const I18N = {
     alt_hint: '海拔由 Open-Meteo 自动查询（WGS-84），储存到设备时随经纬度一并写入，由 iOS Location Spoofer 模块生效。',
     acc_note_html: '<b>精度参数怎么填</b>' +
       '<code>horizontalAccuracy</code> 水平精度（米），默认 <em>39</em>，越小越「精准」—— 想更像 GPS 可设 <em>5~15</em>；保持 <em>39</em> 也正常。<br>' +
-      '<code>verticalAccuracy</code> 垂直精度（米），默认 <em>1000</em> —— 本页已自动填入目标点真实海拔，可调小到 <em>10~30</em>，让海拔显得更可信。' +
+      '<code>verticalAccuracy</code> 垂直精度（米），默认 <em>1000</em> —— 本页已自动填入目标点真实海拔，可调小到 <em>10~30</em>，让海拔显得更可信。<br>' +
+      '<code>扰动半径</code>（米），默认 <em>0</em>（关闭）—— 设为 <em>N</em> 后，每次定位在目标点周围 <em>N</em> 米内随机偏移，避免每次结果一模一样。想固定在精确坐标就留 <em>0</em>。' +
       '<span class="src">参数建议来自上游项目 mekos2772 / ios-location-spoofer</span>',
     fav_title: '收藏的位置', clear_all: '清空全部',
     active_title: '当前生效坐标', active_label: '设备本地坐标 (latitude/longitude/altitude)',
@@ -306,7 +308,7 @@ const I18N = {
     search_title: '搜索地点', search_ph: '搜地名，回车列出候选（只预览，不改定位）', search: '搜索',
     status_hint: '选好位置后点击「储存到设备」写入代理工具',
     modal_title: '收藏此位置', modal_ph: '输入备注名称（如: 公司、家）', cancel: '取消', save_short: '保存',
-    acc: '精度', restore: '恢复真实定位', restored: '✓ 虚拟定位已清除，定位服务开关关闭后，关掉代理开关，等待至少 10 秒钟，再次开启生效', hacc: '水平精度', vacc: '垂直精度',
+    acc: '精度', restore: '恢复真实定位', restored: '✓ 虚拟定位已清除，定位服务开关关闭后，关掉代理开关，等待至少 10 秒钟，再次开启生效', hacc: '水平精度', vacc: '垂直精度', jitter: '扰动半径(米)',
     querying: '查询中...', no_saved: '无已保存的坐标', query_failed: '查询失败 (需要代理模块支持)', cleared: '已清除',
     fav_empty: '暂无收藏，选好位置后点击「收藏位置」',
     active_now: '✓ 当前生效', del: '删除',
@@ -346,7 +348,8 @@ const I18N = {
     alt_hint: 'Altitude is auto-filled from Open-Meteo (WGS-84), written to the device on Save, and applied by the iOS Location Spoofer module.',
     acc_note_html: '<b>Choosing the accuracy values</b>' +
       '<code>horizontalAccuracy</code> in metres, default <em>39</em> — the smaller, the more "precise" it looks. Set <em>5–15</em> to look more like GPS; <em>39</em> is perfectly fine too.<br>' +
-      '<code>verticalAccuracy</code> in metres, default <em>1000</em> — this page already fills in the target\\'s real altitude, so lowering it to <em>10–30</em> makes that altitude look more credible.' +
+      '<code>verticalAccuracy</code> in metres, default <em>1000</em> — this page already fills in the target\\'s real altitude, so lowering it to <em>10–30</em> makes that altitude look more credible.<br>' +
+      '<code>Jitter radius</code> in metres, default <em>0</em> (off) — set to <em>N</em> and each positioning is randomly offset within <em>N</em> m of the target, so results are never identical. Leave <em>0</em> to stay pinned to the exact point.' +
       '<span class="src">Guidance from the upstream project mekos2772 / ios-location-spoofer</span>',
     fav_title: 'Favorites', clear_all: 'Clear All',
     active_title: 'Active coordinates', active_label: 'On-device coordinates (latitude/longitude/altitude)',
@@ -356,7 +359,7 @@ const I18N = {
     search_title: 'Search place', search_ph: 'Search a place, Enter to list candidates (preview only)', search: 'Search',
     status_hint: 'Pick a location, then tap "Save to Device" to write it to your proxy tool',
     modal_title: 'Add this location to favorites', modal_ph: 'Enter a label (e.g. Office, Home)', cancel: 'Cancel', save_short: 'Save',
-    acc: 'Accuracy', restore: 'Restore real location', restored: '✓ Spoofed location cleared. Turn Location Services OFF, switch your proxy off, wait at least 10 seconds, then turn it back ON to take effect.', hacc: 'H. accuracy', vacc: 'V. accuracy',
+    acc: 'Accuracy', restore: 'Restore real location', restored: '✓ Spoofed location cleared. Turn Location Services OFF, switch your proxy off, wait at least 10 seconds, then turn it back ON to take effect.', hacc: 'H. accuracy', vacc: 'V. accuracy', jitter: 'Jitter radius(m)',
     querying: 'Querying...', no_saved: 'No saved coordinates', query_failed: 'Query failed (requires the proxy module)', cleared: 'Cleared',
     fav_empty: 'No favorites yet. Pick a location and tap "Add Favorite".',
     active_now: '✓ Active now', del: 'Delete',
@@ -452,6 +455,8 @@ function currentAlt() {
 }
 function haccVal() { const n = parseInt((document.getElementById('haccInput')||{}).value, 10); return isFinite(n) && n > 0 ? n : 39; }
 function vaccVal() { const n = parseInt((document.getElementById('vaccInput')||{}).value, 10); return isFinite(n) && n > 0 ? n : 1000; }
+// randomRadius (Yu9191 v1.1 "扰动半径"): metres of random jitter per positioning. 0 = off.
+function jitterVal() { const n = parseInt((document.getElementById('jitterInput')||{}).value, 10); return isFinite(n) && n > 0 ? n : 0; }
 function setAltInput(v) {
   const el = document.getElementById('altInput');
   if (!el) return;
@@ -560,6 +565,7 @@ function moduleParamString() {
   let s = 'latitude=' + lat.toFixed(6) + '&longitude=' + lon.toFixed(6);
   const a = currentAlt(); if (a !== null) s += '&altitude=' + a;
   s += '&horizontalAccuracy=' + haccVal() + '&verticalAccuracy=' + vaccVal();
+  const j = jitterVal(); if (j > 0) s += '&randomRadius=' + j;
   return s;
 }
 
@@ -687,6 +693,8 @@ function queryActive() {
         activeLat = parseFloat(d.latitude);
         activeAcc = (d.horizontalAccuracy != null ? d.horizontalAccuracy : (d.accuracy || null));
         activeAlt = (d.altitude !== undefined && d.altitude !== null) ? d.altitude : null;
+        // Reflect the device's stored jitter radius back into the input (Yu9191 v1.1).
+        if (d.randomRadius != null) { const ji = document.getElementById('jitterInput'); if (ji) ji.value = d.randomRadius; }
         activeStatus = 'ok';
         if (!didInitialCenter && !selected) {
           didInitialCenter = true;
@@ -727,7 +735,7 @@ async function save() {
   try {
     let url = SAVE_API + '?lon=' + lon + '&lat=' + lat;
     const a = currentAlt(); if (a !== null) url += '&alt=' + a;
-    url += '&hacc=' + haccVal() + '&vacc=' + vaccVal();
+    url += '&hacc=' + haccVal() + '&vacc=' + vaccVal() + '&randomRadius=' + jitterVal();
     const r = await fetch(url, { method: 'GET', mode: 'cors', cache: 'no-store' });
     const d = await r.json();
     if (d.success) {

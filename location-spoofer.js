@@ -21,6 +21,9 @@
     longitude: -122.00902,
     horizontalAccuracy: 39,
     verticalAccuracy: 1000,
+    // Random perturbation radius in metres (Yu9191 v1.1 "扰动半径"). 0 = off. The
+    // real value is written per-device by the picker (see location-settings.js).
+    randomRadius: 0,
     altitude: 530,
     unknownValue4: 3,
     motionActivityType: 63,
@@ -469,6 +472,10 @@
     if (!Number.isFinite(cfg.rawLimit) || cfg.rawLimit < 0) {
       cfg.rawLimit = 0;
     }
+    cfg.randomRadius = Number(cfg.randomRadius);
+    if (!Number.isFinite(cfg.randomRadius) || cfg.randomRadius < 0) {
+      cfg.randomRadius = 0;
+    }
 
     if (!Number.isFinite(cfg.latitude) || cfg.latitude < -90 || cfg.latitude > 90) {
       throw new Error("invalid latitude");
@@ -476,7 +483,49 @@
     if (!Number.isFinite(cfg.longitude) || cfg.longitude < -180 || cfg.longitude > 180) {
       throw new Error("invalid longitude");
     }
+    // Apply the random offset last, once per response, so every patched WiFi/cell
+    // location in this response shares the same jittered point.
+    if (cfg.randomRadius > 0) {
+      var jittered = applyRandomRadius(cfg.latitude, cfg.longitude, cfg.randomRadius);
+      cfg.latitude = jittered.latitude;
+      cfg.longitude = jittered.longitude;
+      cfg.randomDistance = jittered.distance;
+    }
     return cfg;
+  }
+
+  // Random perturbation (Yu9191 v1.1 "扰动半径"): offset the point by a random distance,
+  // uniform over a disc of the given radius in metres (distance = sqrt(rand)*R), using the
+  // spherical destination-point formula so repeated positioning never returns identical
+  // coordinates. Mirrors dist/wloc.js in Yu9191/wloc exactly.
+  function applyRandomRadius(lat, lon, radiusMeters) {
+    var r = Number(radiusMeters);
+    if (!Number.isFinite(r) || r <= 0) {
+      return { latitude: lat, longitude: lon, distance: 0 };
+    }
+    var distance = Math.sqrt(Math.random()) * r;
+    var bearing = 2 * Math.random() * Math.PI;
+    var angular = distance / 6378137;
+    var latRad = (lat * Math.PI) / 180;
+    var lonRad = (lon * Math.PI) / 180;
+    var newLat = Math.asin(
+      Math.sin(latRad) * Math.cos(angular) +
+        Math.cos(latRad) * Math.sin(angular) * Math.cos(bearing)
+    );
+    var newLon =
+      ((lonRad +
+        Math.atan2(
+          Math.sin(bearing) * Math.sin(angular) * Math.cos(latRad),
+          Math.cos(angular) - Math.sin(latRad) * Math.sin(newLat)
+        ) +
+        3 * Math.PI) %
+        (2 * Math.PI)) -
+      Math.PI;
+    return {
+      latitude: Number(((newLat * 180) / Math.PI).toFixed(8)),
+      longitude: Number(((newLon * 180) / Math.PI).toFixed(8)),
+      distance: distance
+    };
   }
 
   function patchLocation(locationPayload, config) {
@@ -815,6 +864,7 @@
       "configToken",
       "horizontalAccuracy",
       "verticalAccuracy",
+      "randomRadius",
       "unknownValue4",
       "motionActivityType",
       "motionActivityConfidence",
@@ -906,6 +956,7 @@
       "altitude",
       "horizontalAccuracy",
       "verticalAccuracy",
+      "randomRadius",
       "address",
       "configHost",
       "configToken",
@@ -1166,6 +1217,7 @@
       "address",
       "horizontalAccuracy",
       "verticalAccuracy",
+      "randomRadius",
       "altitude",
       "unknownValue4",
       "motionActivityType",

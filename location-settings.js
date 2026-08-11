@@ -73,6 +73,7 @@
     var qen = readKey("enabled");
     var qhacc = readKey("horizontalAccuracy");
     var qvacc = readKey("verticalAccuracy");
+    var qrr = readKey("randomRadius");
     if (qlat != null && qlat !== "" && qlon != null && qlon !== "") {
       result = {
         success: true,
@@ -81,6 +82,7 @@
         altitude: qalt != null && qalt !== "" ? Number(qalt) : null,
         horizontalAccuracy: qhacc != null && qhacc !== "" ? Number(qhacc) : null,
         verticalAccuracy: qvacc != null && qvacc !== "" ? Number(qvacc) : null,
+        randomRadius: qrr != null && qrr !== "" ? Number(qrr) : null,
         enabled: String(qen) === "true"
       };
     } else {
@@ -95,17 +97,21 @@
     var alt = finiteNum(q.alt != null ? q.alt : q.altitude);
     var hacc = finiteNum(q.hacc != null ? q.hacc : q.horizontalAccuracy);
     var vacc = finiteNum(q.vacc != null ? q.vacc : q.verticalAccuracy);
+    var rr = finiteNum(q.rr != null ? q.rr : q.randomRadius);
     if (isFinite(lon) && isFinite(lat)) {
       writeKey("latitude", String(lat));
       writeKey("longitude", String(lon));
       if (isFinite(alt)) writeKey("altitude", String(Math.round(alt)));
       if (isFinite(hacc)) writeKey("horizontalAccuracy", String(Math.round(hacc)));
       if (isFinite(vacc)) writeKey("verticalAccuracy", String(Math.round(vacc)));
+      // randomRadius: 0 is a valid value (off), so write whenever the picker sends it.
+      if (isFinite(rr)) writeKey("randomRadius", String(Math.max(0, Math.round(rr))));
       writeKey("enabled", "true");
       result = { success: true, latitude: lat, longitude: lon };
       if (isFinite(alt)) result.altitude = Math.round(alt);
       if (isFinite(hacc)) result.horizontalAccuracy = Math.round(hacc);
       if (isFinite(vacc)) result.verticalAccuracy = Math.round(vacc);
+      if (isFinite(rr)) result.randomRadius = Math.max(0, Math.round(rr));
     } else {
       result = { success: false, error: "missing lat/lon parameters" };
     }

@@ -13,6 +13,9 @@
     longitude: -122.00902,
     horizontalAccuracy: 39,
     verticalAccuracy: 1000,
+    // Random perturbation radius in metres (Yu9191 v1.1 "扰动半径"). 0 = off. Written
+    // per-device by the picker via location-settings.js ($prefs).
+    randomRadius: 0,
     altitude: 530,
     unknownValue4: 3,
     motionActivityType: 63,
@@ -344,9 +347,35 @@
     cfg.motionActivityConfidence = Math.trunc(Number(cfg.motionActivityConfidence));
     cfg.failOpen = cfg.failOpen !== false;
     cfg.debug = cfg.debug === true || String(cfg.debug).toLowerCase() === "true";
+    cfg.randomRadius = Number(cfg.randomRadius);
+    if (!Number.isFinite(cfg.randomRadius) || cfg.randomRadius < 0) cfg.randomRadius = 0;
     if (!Number.isFinite(cfg.latitude) || cfg.latitude < -90 || cfg.latitude > 90) throw new Error("invalid latitude");
     if (!Number.isFinite(cfg.longitude) || cfg.longitude < -180 || cfg.longitude > 180) throw new Error("invalid longitude");
+    if (cfg.randomRadius > 0) {
+      var jittered = applyRandomRadius(cfg.latitude, cfg.longitude, cfg.randomRadius);
+      cfg.latitude = jittered.latitude;
+      cfg.longitude = jittered.longitude;
+      cfg.randomDistance = jittered.distance;
+    }
     return cfg;
+  }
+
+  // Random perturbation (Yu9191 v1.1 "扰动半径") — see location-spoofer.js for details.
+  function applyRandomRadius(lat, lon, radiusMeters) {
+    var r = Number(radiusMeters);
+    if (!Number.isFinite(r) || r <= 0) return { latitude: lat, longitude: lon, distance: 0 };
+    var distance = Math.sqrt(Math.random()) * r;
+    var bearing = 2 * Math.random() * Math.PI;
+    var angular = distance / 6378137;
+    var latRad = (lat * Math.PI) / 180;
+    var lonRad = (lon * Math.PI) / 180;
+    var newLat = Math.asin(Math.sin(latRad) * Math.cos(angular) + Math.cos(latRad) * Math.sin(angular) * Math.cos(bearing));
+    var newLon = ((lonRad + Math.atan2(Math.sin(bearing) * Math.sin(angular) * Math.cos(latRad), Math.cos(angular) - Math.sin(latRad) * Math.sin(newLat)) + 3 * Math.PI) % (2 * Math.PI)) - Math.PI;
+    return {
+      latitude: Number(((newLat * 180) / Math.PI).toFixed(8)),
+      longitude: Number(((newLon * 180) / Math.PI).toFixed(8)),
+      distance: distance
+    };
   }
 
   function loadConfig() {
@@ -354,7 +383,7 @@
     // 键与 location-settings.js 写入的一致：enabled/latitude/longitude/altitude/horizontalAccuracy/verticalAccuracy。
     var cfg = {};
     for (var k in DEFAULT_CONFIG) { if (Object.prototype.hasOwnProperty.call(DEFAULT_CONFIG, k)) cfg[k] = DEFAULT_CONFIG[k]; }
-    var keys = ["enabled", "latitude", "longitude", "altitude", "horizontalAccuracy", "verticalAccuracy"];
+    var keys = ["enabled", "latitude", "longitude", "altitude", "horizontalAccuracy", "verticalAccuracy", "randomRadius"];
     if (typeof $prefs !== "undefined" && $prefs.valueForKey) {
       for (var i = 0; i < keys.length; i++) {
         var v = $prefs.valueForKey(keys[i]);
@@ -419,7 +448,9 @@
     spoofAppleResponse: spoofAppleResponse,
     extractAppleWLocPayload: extractAppleWLocPayload,
     parseArpc: parseArpc,
-    coordToInt: coordToInt
+    coordToInt: coordToInt,
+    normalizeConfig: normalizeConfig,
+    loadConfig: loadConfig
   };
 
   if (typeof module !== "undefined" && module.exports) {
