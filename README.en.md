@@ -4,6 +4,8 @@
 
 Use the HTTPS-decryption (MITM) feature of a proxy app to trick Apple's location service — and therefore Apple Maps — into placing your iPhone anywhere in the world.
 
+> ✅ **Synced with upstream [Yu9191/wloc v1.1](https://github.com/Yu9191/wloc/releases)**: random jitter radius (each fix is randomly offset within N metres of the target so results are never identical) · Hong Kong / Macau / Taiwan coordinates (Apple/Google emit WGS-84 there, so no more wrong GCJ reverse-shift) · Baidu link parsing · Amap `position=` lon/lat order fix. Set the jitter radius on the picker page.
+
 > 📖 **New here?** The step-by-step walkthrough is Chinese-only for now → [使用教程.md](使用教程.md) (install, configure, verify, and troubleshooting).
 >
 > 🗺️ **Online map picker (stateless, shareable by many)** → **https://cyberhandyman-ioslocspo.cyberhandyman.workers.dev**

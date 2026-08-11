@@ -48,6 +48,8 @@ h1{ font-size:23px; font-weight:800; letter-spacing:.3px; background:linear-grad
 .ytline .yt{ color:#ff6b70; text-decoration:none; text-shadow:0 0 18px rgba(255,91,96,.45); }
 .credit{ font-size:12px; color:var(--muted); margin-top:9px; line-height:1.7; }
 .credit a{ color:#8fe0e6; text-decoration:none; }
+.synced{ font-size:12px; color:#22c55e; font-weight:700; margin-top:8px; }
+.synced a{ color:#22c55e; text-decoration:underline; }
 
 /* --- primary CTAs (green picker + video) --- */
 .ctas{ display:flex; gap:10px; margin:18px 0 4px; }
@@ -123,6 +125,7 @@ footer b{ color:#8fe0e6; }
       <a href="https://github.com/mekos2772/ios-location-spoofer" target="_blank" rel="noopener">mekos2772</a> ·
       <a href="https://github.com/acheong08/ios-location-spoofer" target="_blank" rel="noopener">acheong08</a>
     </p>
+    <p class="synced">✅ 已同步上游 <a href="https://github.com/Yu9191/wloc/releases" target="_blank" rel="noopener">Yu9191/wloc v1.1</a>：随机扰动半径 · 港澳台/百度坐标解析</p>
   </header>
 
   <div class="ctas">

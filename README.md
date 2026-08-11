@@ -6,6 +6,8 @@
 
 > 📺 YouTube：**[CyberHandyman 赛博工具人](https://www.youtube.com/@CyberHandyman/videos)** ｜ ✈️ Telegram 讨论群：**[@cyberhandymancngroup](https://t.me/cyberhandymancngroup)**
 
+> ✅ **已同步上游 [Yu9191/wloc v1.1](https://github.com/Yu9191/wloc/releases)**：随机扰动半径（每次定位在目标点周围随机偏移，避免结果完全相同）· 港澳台坐标（苹果/Google 在港澳台直发 WGS-84，不再误做 GCJ 反算）· 百度链接解析 · 高德 `position=` 经纬顺序修正。扰动半径在选点页设置。
+
 ---
 
 ## ⚠️ 免费开源项目 · 禁止售卖

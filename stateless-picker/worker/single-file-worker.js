@@ -526,6 +526,7 @@ body {
 .topbar .topcredit a { color:#8fe0e6; text-decoration:none; font-weight:700; }
 .topbar .topcredit .ytname { font-size:13.5px; font-weight:800; color:#ff6b70; text-shadow:0 0 14px rgba(255,91,96,.4); }
 .topbar .topcredit .forkline { font-size:10.5px; color:#6b7484; }
+.topbar .topcredit .forkline .v11 { color:#22c55e; font-weight:700; }
 .topbar .tg { flex:none; color:#5cb8e8; font-weight:700; text-decoration:none; padding:3px 9px; border:1px solid rgba(42,171,238,.45); border-radius:20px; }
 .topbar .tg:active { background:rgba(42,171,238,.14); }
 
@@ -650,7 +651,7 @@ body {
 <body>
 <div class="topbar">
   <a class="back" href="/">← 主页</a>
-  <span class="topcredit">📺 <a class="ytname" href="https://www.youtube.com/@CyberHandyman/videos" target="_blank" rel="noopener">YouTube CyberHandyman 赛博工具人</a><span class="forkline"> · fork from 鸣谢贡献者: Yu9191 / mekos2772 / acheong08</span></span>
+  <span class="topcredit">📺 <a class="ytname" href="https://www.youtube.com/@CyberHandyman/videos" target="_blank" rel="noopener">YouTube CyberHandyman 赛博工具人</a><span class="forkline"> · fork from 鸣谢贡献者: Yu9191 / mekos2772 / acheong08 <span class="v11">· 已同步 Yu9191 v1.1</span></span></span>
   <a class="tg" href="https://t.me/cyberhandymancngroup" target="_blank" rel="noopener">✈️ TG群</a>
 </div>
 <div class="redbox">
@@ -1414,6 +1415,8 @@ h1{ font-size:23px; font-weight:800; letter-spacing:.3px; background:linear-grad
 .ytline .yt{ color:#ff6b70; text-decoration:none; text-shadow:0 0 18px rgba(255,91,96,.45); }
 .credit{ font-size:12px; color:var(--muted); margin-top:9px; line-height:1.7; }
 .credit a{ color:#8fe0e6; text-decoration:none; }
+.synced{ font-size:12px; color:#22c55e; font-weight:700; margin-top:8px; }
+.synced a{ color:#22c55e; text-decoration:underline; }
 
 /* --- primary CTAs (green picker + video) --- */
 .ctas{ display:flex; gap:10px; margin:18px 0 4px; }
@@ -1489,6 +1492,7 @@ footer b{ color:#8fe0e6; }
       <a href="https://github.com/mekos2772/ios-location-spoofer" target="_blank" rel="noopener">mekos2772</a> ·
       <a href="https://github.com/acheong08/ios-location-spoofer" target="_blank" rel="noopener">acheong08</a>
     </p>
+    <p class="synced">✅ 已同步上游 <a href="https://github.com/Yu9191/wloc/releases" target="_blank" rel="noopener">Yu9191/wloc v1.1</a>：随机扰动半径 · 港澳台/百度坐标解析</p>
   </header>
 
   <div class="ctas">

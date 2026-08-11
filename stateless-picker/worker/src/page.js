@@ -44,6 +44,7 @@ body {
 .topbar .topcredit a { color:#8fe0e6; text-decoration:none; font-weight:700; }
 .topbar .topcredit .ytname { font-size:13.5px; font-weight:800; color:#ff6b70; text-shadow:0 0 14px rgba(255,91,96,.4); }
 .topbar .topcredit .forkline { font-size:10.5px; color:#6b7484; }
+.topbar .topcredit .forkline .v11 { color:#22c55e; font-weight:700; }
 .topbar .tg { flex:none; color:#5cb8e8; font-weight:700; text-decoration:none; padding:3px 9px; border:1px solid rgba(42,171,238,.45); border-radius:20px; }
 .topbar .tg:active { background:rgba(42,171,238,.14); }
 
@@ -168,7 +169,7 @@ body {
 <body>
 <div class="topbar">
   <a class="back" href="/">← 主页</a>
-  <span class="topcredit">📺 <a class="ytname" href="https://www.youtube.com/@CyberHandyman/videos" target="_blank" rel="noopener">YouTube CyberHandyman 赛博工具人</a><span class="forkline"> · fork from 鸣谢贡献者: Yu9191 / mekos2772 / acheong08</span></span>
+  <span class="topcredit">📺 <a class="ytname" href="https://www.youtube.com/@CyberHandyman/videos" target="_blank" rel="noopener">YouTube CyberHandyman 赛博工具人</a><span class="forkline"> · fork from 鸣谢贡献者: Yu9191 / mekos2772 / acheong08 <span class="v11">· 已同步 Yu9191 v1.1</span></span></span>
   <a class="tg" href="https://t.me/cyberhandymancngroup" target="_blank" rel="noopener">✈️ TG群</a>
 </div>
 <div class="redbox">
